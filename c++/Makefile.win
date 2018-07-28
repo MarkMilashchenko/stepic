@@ -1,0 +1,21 @@
+# Project: Stepic_C++
+# Makefile
+
+CPP = D:\Programs\MinGW\bin\g++
+CXXFLAGS = -Werror -Wall
+
+.PHONY: all clean
+
+all: bin/main clean
+
+src/test_module.o: src/test_module.cpp src/test_module.h
+	$(CPP) $(CXXFLAGS) -c src/test_module.cpp -o src/test_module.o
+
+src/main.o: src/main.cpp
+	$(CPP) $(CXXFLAGS) -c src/main.cpp -o src/main.o
+
+bin/main: src/test_module.o src/main.o 
+	$(CPP) $(CXXFLAGS) src/test_module.o src/main.o -o bin/main
+	
+clean:
+	rm -f src/main.o src/test_module.o
