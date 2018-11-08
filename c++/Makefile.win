@@ -1,12 +1,17 @@
 # Project: Stepic_C++
 # Makefile
 
-CPP = D:\Programs\MinGW\bin\g++
-CXXFLAGS = -Werror -Wall
+CPP = D:\Programs\mingw\bin\x86_64-w64-mingw32-g++
+
+CXXFLAGS = -Werror -Wall -std=c++11
+MODULES = src/unit_5_1.o src/unit_4_3.o src/test_module.o src/main.o
 
 .PHONY: all clean
 
 all: bin/main clean
+
+src/unit_5_1.o: src/unit_5_1.cpp src/unit_5_1.h
+	$(CPP) $(CXXFLAGS) -c src/unit_5_1.cpp -o src/unit_5_1.o
 
 src/unit_4_3.o: src/unit_4_3.cpp src/unit_4_3.h
 	$(CPP) $(CXXFLAGS) -c src/unit_4_3.cpp -o src/unit_4_3.o
@@ -17,8 +22,8 @@ src/test_module.o: src/test_module.cpp src/test_module.h
 src/main.o: src/main.cpp
 	$(CPP) $(CXXFLAGS) -c src/main.cpp -o src/main.o
 
-bin/main: src/unit_4_3.o src/test_module.o src/main.o 
-	$(CPP) $(CXXFLAGS) src/unit_4_3.o src/test_module.o src/main.o -o bin/main
+bin/main: $(MODULES) 
+	$(CPP) $(CXXFLAGS) $(MODULES) -o bin/main
 	
 clean:
-	rm -f src/main.o src/test_module.o src/unit_4_3.o
+	rm -f $(MODULES)
