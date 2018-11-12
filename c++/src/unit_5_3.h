@@ -14,6 +14,19 @@ namespace unit_5_3 {
 	struct Fib<0>
 	{ static int const value = 0; };
 	
+	template<int ... input>
+	struct IntList;
+	
+	template<int H, int ... T>
+	struct IntList<H, T...>
+	{
+		static int const Head = H;
+		using Tail = IntList<T...>;
+	};
+	
+	template<>
+	struct IntList<> {};
+	
 	void test();
 }
 
