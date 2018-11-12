@@ -4,5 +4,14 @@
 namespace unit_5_3
 {	
 	void test()
-	{ std::cout << unit_5_3::Fib<10>::value << '\n'; }
+	{
+		std::cout << unit_5_3::Fib<10>::value << '\n';
+		
+		using primes = unit_5_3::IntList<2,3,5,7,11,13>;
+		constexpr int head = primes::Head;
+		//using odd_primes = primes::Tail;
+		
+		std::cout << head << '\n';
+		
+	}
 }
