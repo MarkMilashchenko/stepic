@@ -3,6 +3,7 @@
 #include "unit_4_3.h"
 #include "unit_5_1.h"
 #include "unit_5_2.h"
+#include "unit_5_3.h"
 
 int main(int argc, char** argv) {
 	
@@ -11,6 +12,8 @@ int main(int argc, char** argv) {
 	unit_5_1::test();
 	
 	unit_5_2::test();
+	
+	unit_5_3::test();
 	
 	system("PAUSE");
 	return 0;

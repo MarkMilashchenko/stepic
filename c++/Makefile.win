@@ -4,11 +4,14 @@
 CPP = D:\Programs\mingw\bin\x86_64-w64-mingw32-g++
 
 CXXFLAGS = -Werror -Wall -std=c++11
-MODULES = src/unit_5_2.o src/unit_5_1.o src/unit_4_3.o src/test_module.o src/main.o
+MODULES = src/unit_5_3.o src/unit_5_2.o src/unit_5_1.o src/unit_4_3.o src/test_module.o src/main.o
 
 .PHONY: all clean
 
 all: bin/main clean
+
+src/unit_5_3.o: src/unit_5_3.cpp src/unit_5_3.h
+	$(CPP) $(CXXFLAGS) -c src/unit_5_3.cpp -o src/unit_5_3.o
 
 src/unit_5_2.o: src/unit_5_2.cpp src/unit_5_2.h
 	$(CPP) $(CXXFLAGS) -c src/unit_5_2.cpp -o src/unit_5_2.o
