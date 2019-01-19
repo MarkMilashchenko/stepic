@@ -87,6 +87,12 @@ namespace unit_5_3 {
     	static int const value = a + b;    
 	};
 	
+	template<int a, int b>
+	struct Minus
+	{
+    	static int const value = a - b;    
+	};
+	
 	template<typename T1, typename T2, template<int, int> class F>
 	struct Zip;
 
@@ -105,18 +111,82 @@ namespace unit_5_3 {
 	};
 	
 	
-//	template<int m = 0, int kg = 0, int s = 0, int A = 0, int K = 0, int mol = 0, int cd = 0>
-//	using Dimension = IntList<m, kg, s, A, K, mol, cd>;
-//	
-//	template<IntList<int... Args> list>
-//	struct Quantity
+	template<int m = 0, int kg = 0, int s = 0, int A = 0, int K = 0, int mol = 0, int cd = 0>
+	using Dimension = IntList<m, kg, s, A, K, mol, cd>;
+	
+	template<typename T>
+	struct Quantity
+	{
+		Quantity();
+		explicit Quantity(double const & input);
+		Quantity(Quantity<T> const & input);
+
+		Quantity<T> operator+(Quantity<T> const & input);
+		Quantity<T> operator-(Quantity<T> const & input);
+		
+		template<typename T2>
+		Quantity<typename Zip<T, T2, Plus>::type> operator*(Quantity<T2> const & input);
+		template<typename T2>
+		Quantity<typename Zip<T, T2, Minus>::type> operator/(Quantity<T2> const & input);
+		
+		Quantity<T> operator*(double const & input);
+		Quantity<T> operator/(double const & input);
+
+		double value() const;
+				
+		double data;
+		T dimension;
+	};
+	
+	typedef char METHOD;
+	struct VALUE {METHOD m[2];};
+	
+	template<bool b>
+	struct Bool2type { using type = METHOD; };
+	
+	template<>
+	struct Bool2type<false> { using type = VALUE; };
+	
+	template<typename T>
+	size_t call_size(T& a, METHOD) { return a.size(); };
+	
+	template<typename T>
+	size_t call_size(T& a, VALUE) { return a.size; };
+		
+	template<typename T>
+	struct is_size_defined
+	{
+		template<typename Z, size_t (Z::*)() const = &Z::size>
+		struct wrapper_method {};
+		
+		template<typename C>
+		static METHOD check(wrapper_method<C>* p) { return METHOD();};
+		
+		template<typename C>
+		static VALUE check(...) { return VALUE(); };
+		
+		static bool const value = sizeof(METHOD) == sizeof(check<T>(0));
+	};
+	
+	template<typename T>
+	size_t get_size(T& input)
+	{
+		constexpr bool value = is_size_defined<T>::value;
+		using CALL = typename Bool2type<value>::type;
+		return call_size(input, CALL());
+	};
+
+//	более крутое решение
+//	template<class T, size_t (T::*)() const = &T::size>
+//	size_t get_size(T const& t)
 //	{
-//		Quantity();
-//		explicit Quantity(double input);
-//		
-//		void operator+();
-//		
-//		double value;
+//    	return t.size();
+//	};
+//
+//	template<class T, size_t (T::*) = &T::size>
+//	size_t get_size(T const& t)
+//	{
+//    	return t.size;
 //	};
 	
 	void test();

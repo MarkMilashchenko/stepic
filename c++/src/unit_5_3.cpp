@@ -4,6 +4,81 @@
 
 namespace unit_5_3
 {	
+	template<typename T>
+	Quantity<T>::Quantity(): data(0.0)
+	{}
+	
+	template<typename T>
+	Quantity<T>::Quantity(double const & input): data(input)
+	{}
+	
+	template<typename T>
+	Quantity<T>::Quantity(Quantity<T> const & input): data(input.value())
+	{}
+	
+	template<typename T>
+	Quantity<T> Quantity<T>::operator+(Quantity<T> const & input)
+	{
+		return Quantity<T>(data + input.value());
+	}
+	
+	template<typename T>
+	Quantity<T> Quantity<T>::operator-(Quantity<T> const & input)
+	{
+		return Quantity<T>(data - input.value());
+	}
+	
+	template<typename T>
+	template<typename T2>
+	Quantity<typename unit_5_3::Zip<T, T2, unit_5_3::Plus>::type> Quantity<T>::operator*(Quantity<T2> const & input)
+	{
+		using newDimension = typename unit_5_3::Zip<T, T2, unit_5_3::Plus>::type;
+		double newValue = data * input.value();
+		return Quantity<newDimension>(newValue);
+	};
+	
+	template<typename T>
+	template<typename T2>
+	Quantity<typename unit_5_3::Zip<T, T2, unit_5_3::Minus>::type> Quantity<T>::operator/(Quantity<T2> const & input)
+	{
+		using newDimension = typename unit_5_3::Zip<T, T2, unit_5_3::Minus>::type;
+		double newValue = 0.0;
+		if (input.value() != 0)
+			newValue = data / input.value();
+		return Quantity<newDimension>(newValue);
+	};
+	
+	template<typename T>
+	Quantity<T> Quantity<T>::operator*(double const & input)
+	{
+		return Quantity<T>(data * input);
+	}
+	
+	template<typename T>
+	Quantity<T> Quantity<T>::operator/(double const & input)
+	{
+		return Quantity<T>(data / input);
+	}
+	
+	template<typename T>
+	Quantity<T> operator*(double const & A, Quantity<T> B)
+	{
+		return B * A;
+	}
+	
+	template<typename T>
+	Quantity<typename unit_5_3::Zip<Dimension<>, T, unit_5_3::Minus>::type> operator/(double const & A, Quantity<T> B)
+	{
+		double newValue = B.value() / A;
+		return Quantity<typename unit_5_3::Zip<Dimension<>, T, unit_5_3::Minus>::type>(newValue);
+	}
+	
+	template<typename T>
+	double Quantity<T>::value() const
+	{
+		return data;
+	}
+
 	void test()
 	{
 		std::cout << unit_5_3::Fib<10>::value << '\n';
@@ -34,13 +109,24 @@ namespace unit_5_3
 		using L6 = unit_5_3::Zip<L4, L5, unit_5_3::Plus>::type;  // IntList<2, 5, 10, 11, 7>
 		std::cout << "Head: " << L6::Head << " Length: " << unit_5_3::Length<L6>::value << '\n';
 
-//		using NumberQ = unit_5_3::Quantity<unit_5_3::Dimension<>>;
-//		using LengthQ = unit_5_3::Quantity<unit_5_3::Dimension<1>>;
-//		using MassQ = unit_5_3::Quantity<unit_5_3::Dimension<0, 1>>;
-//		using TimeQ = unit_5_3::Quantity<unit_5_3::Dimension<0, 0, 1>>;
-//		using VelocityQ = unit_5_3::Quantity<unit_5_3::Dimension<1, 0, -1>>;
-//		using AccelQ = unit_5_3::Quantity<unit_5_3::Dimension<1, 0, -2>>;
-//		using ForceQ = unit_5_3::Quantity<unit_5_3::Dimension<1, 1, -2>>;
+		using NumberQ = unit_5_3::Quantity<Dimension<1, 0, -1>>;
+		NumberQ Q1{3};
+		NumberQ Q2{4};
+		NumberQ Q3{2};
+		NumberQ Q4{1};
+		auto n = (2.0 / Q3) * Q2 / Q1;
+		std::cout << n.value() << '\n';
 		
+		std::string s{"Hello"};
+		size_t s_size = unit_5_3::get_size(s);   // 5, вызывается метод size()
+
+		struct Struct 
+		{ 
+    		size_t size = 10;  
+		};
+
+		Struct x;
+		size_t x_size = unit_5_3::get_size(x);  // 10, читается поле size
+		std::cout << s_size << " " << x_size << '\n';
 	}
 }
